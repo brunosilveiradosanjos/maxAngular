@@ -7,9 +7,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
+  // the application is started at recipe
   loadedFeature = 'recipe'
 
   onNavigate(path: string) {
+    // update loadedFeature to change path
     this.loadedFeature = path;
   }
 }
