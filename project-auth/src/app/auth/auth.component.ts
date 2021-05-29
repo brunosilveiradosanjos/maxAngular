@@ -31,10 +31,10 @@ export class AuthComponent {
         console.log('res ', res);
         this.isLoading = false;
         this.error = undefined;
-      }, error => {
-        console.log('error ', error);
+      }, errorMessage => {
+        console.log('errorMessage ', errorMessage);
         this.isLoading = false;
-        this.error = error["error"]["message"]
+        this.error = errorMessage;
       })
     }
 
