@@ -9,7 +9,9 @@ import { AuthService } from './auth.service';
 export class AuthComponent {
   constructor(private authService: AuthService) { }
 
-  isLoginMode = true;
+  private isLoginMode = true;
+  private isLoading = false;
+  private error: string = undefined;
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -21,13 +23,18 @@ export class AuthComponent {
     }
     const { name, email, password, passwordConfirm } = form.value;
 
+    this.isLoading = true;
     if (this.isLoginMode) {
 
     } else {
       this.authService.signup(name, email, password, passwordConfirm).subscribe(res => {
         console.log('res ', res);
+        this.isLoading = false;
+        this.error = undefined;
       }, error => {
         console.log('error ', error);
+        this.isLoading = false;
+        this.error = error["error"]["message"]
       })
     }
 
