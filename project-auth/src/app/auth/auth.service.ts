@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { error } from 'selenium-webdriver';
+import { environment } from './../../environments/environment';
 
-interface AuthResponse {
+export interface AuthResponse {
   status: string,
   token: string,
   data: Object
@@ -16,8 +16,9 @@ export class AuthService {
 
   signup(name: string, email: string, password: string, passwordConfirm: string) {
     return this.http
-      .post<AuthResponse>(
-        'http://localhost:3000/api/v1/users/signup',
+      .post<AuthResponse>
+      (
+        `${environment.api}/users/signup`,
         {
           name,
           email,
@@ -25,14 +26,40 @@ export class AuthService {
           passwordConfirm
         }
       )
-      .pipe(catchError(errorRes => {
-        let errorMessage = 'An unknown error occurred!';
-        if (!errorRes.error || !errorRes.error.message) {
-          return throwError(errorMessage);
-        }
-        errorMessage = errorRes["error"]["message"]
-        return throwError(errorMessage);
-      })
+      .pipe(
+        catchError(
+          errorRes => {
+            let errorMessage = 'An unknown error occurred!';
+            if (!errorRes.error || !errorRes.error.message) {
+              return throwError(errorMessage);
+            }
+            errorMessage = errorRes["error"]["message"]
+            return throwError(errorMessage);
+          }
+        )
       );
   }
+
+  login(email: string, password: string) {
+    return this.http
+      .post<AuthResponse>(
+        `${environment.api}/users/login`,
+        {
+          email,
+          password
+        }
+      )
+      .pipe(
+        catchError(
+          errorRes => {
+            let errorMessage = 'An unknown error occurred!';
+            if (!errorRes.error || !errorRes.error.message) {
+              return throwError(errorMessage);
+            }
+            errorMessage = errorRes["error"]["message"]
+            return throwError(errorMessage);
+          }
+        )
+      );
+  };
 }
