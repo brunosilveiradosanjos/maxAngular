@@ -59,7 +59,7 @@ export class AuthService {
     const expirationDate = new Date(new Date().getTime() + +exp * 1000);
     const user = new User(token, id, name, email, expirationDate);
     this.user.next(user);
-    console.log('handleAuthentication ', this.user);
+    // console.log('handleAuthentication ', this.user);
   }
 
   private handleError(errorRes: HttpErrorResponse) {
