@@ -11,15 +11,22 @@ export class DataStorageService {
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
-    console.log(recipes);
-    // this.http
-    // .post(
-    //   'https://ng-course-recipe-book-65f10.firebaseio.com/recipes.json',
-    //   recipes
-    // )
-    // .subscribe(response => {
-    //   console.log(response);
-    // });
+    console.log('getRecipes ', recipes);
+
+    for (let key in recipes) {
+
+      const recipe = recipes[key];
+      console.log(recipe)
+
+      this.http
+        .post(
+          `${environment.api}/recipes`,
+          recipe
+        )
+        .subscribe(response => {
+          console.log(response);
+        });
+    }
   }
 
   fetchRecipes() {
