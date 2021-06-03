@@ -37,29 +37,21 @@ export class DataStorageService {
   fetchRecipes() {
     // take(1) tell RxJS I only wanna take one value from that observable and thereafter it should automatically unsubscribe
     // exhaustMap waits for the first observable, for the user observable to complete, witch will happen after we took the latest user. Thereafter, it gives us that user, so in exhaustMap we pass in a function there we get the data from that previous observable and now we return a new observable in there which will then replace our previous observable in that entire observable chain.
-    return this.authService.user.pipe(
-      take(1),
-      exhaustMap(user => {
-        return this.http
-          .get<Recipe[]>(
-            `${environment.api}/recipes`,
-            {
-              headers: new HttpHeaders().set('Authorization', `Bearer ${user.token}`)
-            }
-          )
-      }),
-      map(resData => {
-        const recipes: Recipe[] = resData["data"]["recipe"];
-        return recipes.map(recipe => {
-          return {
-            ...recipe,
-            ingredients: recipe.ingredients ? recipe.ingredients : []
-          };
-        });
-      }),
-      tap(recipes => {
-        this.recipeService.setRecipes(recipes);
-      })
-    );
+    return this.http
+      .get<Recipe[]>(`${environment.api}/recipes`)
+      .pipe(
+        map(resData => {
+          const recipes: Recipe[] = resData["data"]["recipe"];
+          return recipes.map(recipe => {
+            return {
+              ...recipe,
+              ingredients: recipe.ingredients ? recipe.ingredients : []
+            };
+          });
+        }),
+        tap(recipes => {
+          this.recipeService.setRecipes(recipes);
+        })
+      );
   }
 }

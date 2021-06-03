@@ -4,11 +4,11 @@ export class User {
     public id: string,
     public name: string,
     public email: string,
-    public expirationDate: Date
+    private _expirationDate: Date
   ) { }
 
   get token() {
-    if (!this.expirationDate || new Date() > this.expirationDate) {
+    if (!this._expirationDate || new Date() > this._expirationDate) {
       return null;
     }
     return this._token;
