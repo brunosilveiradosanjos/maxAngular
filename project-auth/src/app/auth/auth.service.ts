@@ -55,10 +55,34 @@ export class AuthService {
       );
   };
 
+  autoLogin() {
+    const userData:
+      {
+        _token: string,
+        id: string,
+        name: string,
+        email: string,
+        _expirationDate: string
+      } = JSON.parse(localStorage.getItem('userData'));
+    if (!userData) {
+      return;
+    }
+    const loadedUser = new User(
+      userData._token,
+      userData.id,
+      userData.name,
+      userData.email,
+      new Date(userData._expirationDate)
+    );
+    if (loadedUser.token) {
+      this.user.next(loadedUser);
+    }
+  }
+
   logout() {
     this.user.next(null);
     this.router.navigate(['/auth']);
-  }
+  };
 
   private handleAuthentication(resData) {
     let { email, name } = resData["data"]["user"]
@@ -68,6 +92,7 @@ export class AuthService {
     const user = new User(token, id, name, email, expirationDate);
     this.user.next(user);
     // console.log('handleAuthentication ', this.user);
+    localStorage.setItem('userData', JSON.stringify(user));
   }
 
   private handleError(errorRes: HttpErrorResponse) {
